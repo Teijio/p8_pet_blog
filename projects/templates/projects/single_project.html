@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+  {{ project.title }}
+  <br>
+  {% for tag in project.tags.all %}
+    <span style="border:1px solid blue">{{ tag }}</span>
+  {% endfor %}
+  <br>
+  <p>{{ project.description }}</p>
+{% endblock content %}
