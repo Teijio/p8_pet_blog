@@ -17,31 +17,42 @@ def project(request, pk):
 
 def create_project(request):
     form = ProjectForm()
-
     if request.method == "POST":
-        form = ProjectForm(request.POST)
+        form = ProjectForm(
+            request.POST or None,
+            files=request.FILES or None,
+        )
         if form.is_valid():
             form.save()
             return redirect("projects:projects")
-
     context = {"form": form}
     return render(request, "projects/project_form.html", context)
 
 
 def update_project(request, pk):
     project = Project.objects.get(id=pk)
-    form = ProjectForm(instance=project)
-
+    form = ProjectForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=project,
+    )
     if request.method == "POST":
-        form = ProjectForm(request.POST, instance=project)
+        form = ProjectForm(
+            request.POST or None,
+            files=request.FILES or None,
+            instance=project,
+        )
         if form.is_valid():
             form.save()
             return redirect("projects:projects")
-
     context = {"form": form}
     return render(request, "projects/project_form.html", context)
 
 
 def delete_project(request, pk):
     project = Project.objects.get(id=pk)
-    return render(request, "projects/project.html", context)
+    if request.method == "POST":
+        project.delete()
+        return redirect("projects:projects")
+    context = {"project": project}
+    return render(request, "projects/delete_object.html", context)

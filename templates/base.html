@@ -1,11 +1,25 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="{% static 'images/fav.png' %}" type="image/x-icon" />
+  <!-- Icon - IconMonster -->
+  <link rel="stylesheet" href="https://cdn.iconmonstr.com/1.3.0/css/iconmonstr-iconic-font.min.css" />
+  <!-- Mumble UI -->
+  <link rel="stylesheet" href="{% static 'uikit/styles/uikit.css' %}" />
+  <!-- Dev Search UI -->
+  <link rel="stylesheet" href="{% static 'styles/app.css' %}" />
+
+  <title>Blog{% block title %} {% endblock title %}</title>
+  <title>InstaBlog - Share your things with other people!</title>
 </head>
+
 <body>
   {% include "partials/_navbar.html" %}
   <br>
@@ -13,4 +27,5 @@
   {% endblock content %}
   <h1>footer</h1>
 </body>
+
 </html>

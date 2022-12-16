@@ -1,15 +1,14 @@
 {% extends "base.html" %}
-
+{% block title %} | Delete{% endblock %}
 {% block content %}
-
-  <form>
-    <p>Are you sure you want to delete "{{ object }}"</p>
-    <a href="{% url 'project' %}">
-      <button>
+  <form method="POST">
+    {% csrf_token %}
+    <p>Are you sure you want to delete "{{ project.title }}"</p>
+    <button>
+      <a href="{% url 'projects:projects' %}">
         Go back
-      </button>
-    </a>
+      </a>
+    </button>
     <input type="submit" value="Confirm">
   </form>
-
 {% endblock content %}

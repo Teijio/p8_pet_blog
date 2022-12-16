@@ -26,7 +26,7 @@ urlpatterns = [
     ),
     path(
         "delete_project/<str:pk>/",
-        views.update_project,
+        views.delete_project,
         name="delete_project",
     ),
 ]
