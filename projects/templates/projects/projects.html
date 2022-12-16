@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% block title %} | Posts {% endblock %}
 {% block content %}
-
   <table>
-   
     {% for project in projects %}
       <tr>
         <td><a href="{% url 'projects:project' project.id %}">View</a></td>
@@ -12,15 +10,12 @@
       </tr>
     {% endfor %}
   </table>
-
-
   <main class="projects">
     <section class="hero-section text-center">
       <div class="container container--narrow">
         <div class="hero-section__box">
-          <h2>Search for <span>Projects</span></h2>
+          <h2>Search for <span>Posts</span></h2>
         </div>
-
         <div class="hero-section__search">
           <form class="form" action="#" method="get">
             <div class="form__field">
@@ -28,7 +23,6 @@
               <input class="input input--text" id="formInput#search" type="text" name="text"
                 placeholder="Search by Project Title" />
             </div>
-
             <input class="btn btn--sub btn--lg" type="submit" value="Search" />
           </form>
         </div>
@@ -45,12 +39,11 @@
                 <img class="project__thumbnail" src="{{ project.featured_image.url }}" alt="project thumbnail" />
                 <div class="card__body">
                   <h3 class="project__title">{{ project.title }}</h3>
-                  <p><a class="project__author" href="profile.html">By Dennis Ivanov</a></p>
+                  <p><a class="project__author" href="{% url 'users:user_profile' project.owner.id %}">By {{ project.owner.name }}</a></p>
                   <p class="project--rating">
                     <span style="font-weight: bold;">{{ project.vote_ratio }}%</span> Positive
                     Feedback ({{ project.vote_total }} Vote{{ project.vote_total|pluralize:"s"}})
                   </p>
-
                   <div class="project__tags">
                     {% for tag in project.tags.all %}
                       <span class="tag tag--pill tag--main">
@@ -58,7 +51,6 @@
                       </span>
                     {% endfor %}
                   </div>
-
                 </div>
               </a>
             </div>
