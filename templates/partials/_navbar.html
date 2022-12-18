@@ -1,8 +1,8 @@
 {% load static %}
 <header class="header">
   <div class="container container--narrow">
-    <a href="{% url 'projects:projects' %}">
-      <img src="{% static 'images/222.png' %}" width="100" height="48"/>
+    <a class="navbar-brand" href="{% url 'projects:projects' %}">
+      <span style="color:red">Ya</span>tube
     </a>
     <nav class="header__nav">
       <input type="checkbox" id="responsive-menu" />
@@ -15,9 +15,7 @@
         <li class="header__menuItem"><a href="{% url 'projects:projects' %}">Posts</a></li>
         <li class="header__menuItem"><a href="inbox.html">Inbox</a></li>
         {% if request.user.is_authenticated %}
-          <li class="header__menuItem"><a href="{% url 'projects:create_project' %}">Add post</a></li>
-        {% endif %}
-        {% if request.user.is_authenticated %}
+          <li class="header__menuItem"><a href="{% url 'users:user_account' %}">Account</a></li>
           <li class="header__menuItem"><a href="{% url 'users:logout' %}" class="btn btn--sub">Logout</a></li>
         {% else %}
           <li class="header__menuItem"><a href="{% url 'users:login' %}" class="btn btn--sub">Login/Sign Up</a></li>

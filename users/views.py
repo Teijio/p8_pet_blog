@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .forms import CustomUserCreationForm
 
 from .models import Profile
 
@@ -32,19 +32,27 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    messages.error(request, "User was logged out!")
+    messages.success(request, "User was logged out!")
     return redirect("users:login")
 
 
 def register_user(request):
     page = "register"
-    form = UserCreationForm()
+    form = CustomUserCreationForm()
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
+
+            messages.success(request, "User account was created!")
+            login(request, user)
+            return redirect("users:profiles")
+        else:
+            messages.error(
+                request, "An error has occurred during registration"
+            )
 
     context = {"page": page, "form": form}
     return render(request, "users/login_register.html", context)
@@ -67,3 +75,17 @@ def user_profile(request, pk):
         "other_skills": other_skills,
     }
     return render(request, "users/user_profile.html", context)
+
+
+@login_required(login_url="users:login")
+def user_account(request):
+    profile = request.user.profile
+    skills = profile.skill_set.all()
+    projects = profile.project_set.all()
+
+    context = {
+        "profile": profile,
+        "skills": skills,
+        "projects": projects,
+    }
+    return render(request, "users/account.html", context)

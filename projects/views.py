@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .models import Project
+from users.models import Profile
 from .forms import ProjectForm
 
 
@@ -26,7 +27,12 @@ def create_project(request):
             files=request.FILES or None,
         )
         if form.is_valid():
-            form.save()
+            form_save = form.save(commit=False)
+            if form_save.owner:
+                form_save.save()
+            else:
+                form_save.owner = Profile.objects.get(user=request.user)
+                form_save.save()
             return redirect("projects:projects")
     context = {"form": form}
     return render(request, "projects/project_form.html", context)
