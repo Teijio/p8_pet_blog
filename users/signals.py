@@ -11,15 +11,26 @@ from .models import Profile
 # создаст профайл при создании юзера
 @receiver(post_save, sender=User)
 def profile_created(sender, instance, created, **kwargs):
-    print("Profile signal triggered!")
     if created:
         user = instance
         profile = Profile.objects.create(
             user=user,
             username=user.username,
             email=user.email,
-            name=user.first_name  
+            name=user.first_name,
         )
+
+
+@receiver(post_save, sender=Profile)
+def update_user(sender, instance, created, **kwargs):
+    profile = instance
+    user = profile.user
+    if not created:
+        user.first_name = profile.name
+        user.username = profile.username
+        user.email = profile.email
+        user.save()
+
 
 # при удаление профайла удалится и юзер
 @receiver(post_delete, sender=Profile)
