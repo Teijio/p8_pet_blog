@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 from django.contrib.auth.models import User
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 
-from .models import Profile
+from .utils import search_profiles, paginator_profiles
+from .models import Profile, Skill
 
 
 def login_user(request):
@@ -14,7 +16,8 @@ def login_user(request):
         return redirect("users:profiles")
 
     if request.method == "POST":
-        username = request.POST["username"]
+        # добавили lower так как в регистрации преобразуется в lower
+        username = request.POST["username"].lower()
         password = request.POST["password"]
         # проверяем, что существует
         try:
@@ -24,7 +27,15 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("users:profiles")
+            # сперва сделать
+            # href - href="{% url 'users:login' %}?next={{ request.path }}"
+            # с помощью этого, там где Login_required будет перенаправлять
+            # на next, в template action = "" указать пустым
+            return redirect(
+                request.GET["next"]
+                if "next" in request.GET
+                else "users:user_account"
+            )
         else:
             messages.error(request, "Username OR password is incorrect")
     return render(request, "users/login_register.html")
@@ -59,8 +70,13 @@ def register_user(request):
 
 
 def profiles(request):
-    profiles = Profile.objects.all()
-    context = {"profiles": profiles}
+    profiles, search_query = search_profiles(request)
+    custom_range, profiles = paginator_profiles(request, profiles, 2)
+    context = {
+        "profiles": profiles,
+        "search_query": search_query,
+        "custom_range": custom_range,
+    }
     return render(request, "users/profiles.html", context)
 
 

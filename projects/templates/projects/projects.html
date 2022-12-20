@@ -2,15 +2,6 @@
 {% load static %}
 {% block title %} | Posts {% endblock %}
 {% block content %}
-  <table>
-    {% for project in projects %}
-      <tr>
-        <td><a href="{% url 'projects:project' project.id %}">View</a></td>
-        <td><a href="{% url 'projects:update_project' project.id %}">Edit</a></td>
-        <td><a href="{% url 'projects:delete_project' project.id %}">Delete</a></td>
-      </tr>
-    {% endfor %}
-  </table>
   <main class="projects">
     <section class="hero-section text-center">
       <div class="container container--narrow">
@@ -18,18 +9,17 @@
           <h2>Search for <span>Posts</span></h2>
         </div>
         <div class="hero-section__search">
-          <form class="form" action="#" method="get">
+          <form id="searchForm" class="form" action="{% url 'projects:projects' %}" method="get">
             <div class="form__field">
-              <label for="formInput#search">Search By Projects </label>
-              <input class="input input--text" id="formInput#search" type="text" name="text"
-                placeholder="Search by Project Title" />
+              <label for="formInput#search">Search By Posts </label>
+              <input class="input input--text" id="formInput#search" type="text" name="search_query"
+                placeholder="Search posts by title, author, tags" />
             </div>
             <input class="btn btn--sub btn--lg" type="submit" value="Search" />
           </form>
         </div>
       </div>
     </section>
-    <!-- Search Result: DevList -->
     <section class="projectsList">
       <div class="container">
         <div class="grid grid--three">
@@ -64,6 +54,7 @@
         </div>
       </div>
     </section>
+    {% include "paginator.html" with query_set=projects custom_range=custom_range %}
   </main>
 {% endblock content %}
   

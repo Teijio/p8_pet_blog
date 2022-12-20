@@ -24,7 +24,27 @@ class Project(models.Model):
         return self.title
 
     class Meta:
-        ordering = ("-created",)
+        ordering = (
+            "-vote_ratio",
+            "-vote_total",
+            "-created",
+        )
+
+    # делаем лист, чтобы проверить, можем ли мы оставить ревью
+    @property
+    def reviewers(self):
+        queryset = self.review_set.all().values_list("owner__id", flat=True)
+        return queryset
+
+    @property
+    def get_vote_count(self):
+        reviews = self.review_set.all()
+        up_votes = reviews.filter(value="up").count()
+        total_votes = reviews.count()
+        ratio = (up_votes / total_votes) * 100
+        self.vote_total = total_votes
+        self.vote_ratio = ratio
+        self.save()
 
 
 # comment
@@ -33,12 +53,17 @@ class Review(models.Model):
         ("up", "Up vote"),
         ("down", "Down vote"),
     )
-    # owner =
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     body = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # благодаря этому, только 1 ревью можно оставить
+    class Meta:
+        unique_together = [["owner", "project"]]
+        ordering = ("-created",)
 
     def __str__(self):
         return self.value
@@ -51,6 +76,35 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Message(models.Model):
+    sender = models.ForeignKey(
+        Profile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    recipient = models.ForeignKey(
+        Profile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="messages"
+    )
+    name = models.CharField(max_length=200, null=True, blank=True)
+    email = models.EmailField(max_length=200, null=True, blank=True)
+    subject = models.CharField(max_length=200, null=True, blank=True)
+    is_read = models.BooleanField(default=False, null=True)
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
+    
+    def __str__(self):
+        return self.subject
+    
+    class Meta:
+        ordering = ["is_read", "-created"]
 
 
 # class Follow(models.Model):
