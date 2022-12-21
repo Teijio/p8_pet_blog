@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Project, Review, Tag, Message
+from .models import Project, Review, Tag
 
 
 @admin.register(Project)
@@ -15,9 +15,4 @@ class ProjectReview(admin.ModelAdmin):
 
 @admin.register(Tag)
 class ProjectTag(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Message)
-class ProjectMessage(admin.ModelAdmin):
     pass

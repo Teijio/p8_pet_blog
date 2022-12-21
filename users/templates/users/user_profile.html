@@ -14,7 +14,9 @@
               <p class="dev__location">{{ profile.location }}</p>
             {% endif %}
             <br>
-            <a href="#" class="btn btn--sub btn--lg">Send Message </a>
+            {% if request.user.profile.id != profile.id %}
+              <a href="{% url 'users:create_message' profile.id %}" class="btn btn--sub btn--lg">Send Message </a>
+            {% endif %}
           </div>
         </div>
       </div>

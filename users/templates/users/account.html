@@ -10,8 +10,12 @@
               <a class="tag tag--pill tag--main settings__btn" href="{% url 'users:edit_account' %}"><i class="im im-edit"></i> Edit</a>
               <img class="avatar avatar--xl dev__avatar" src="{{ profile.profile_image.url }}" />
               <h2 class="dev__name">{{ profile.name }}</h2>
+              {% if profile.short_intro %}
               <p class="dev__title">{{ profile.short_intro }}</p>
+              {% endif %}
+              {% if profile.location %}
               <p class="dev__location">Based in {{ profile.location }}</p>
+              {% endif %}
 
                 {% comment %}   
                 <ul class="dev__social">
@@ -24,7 +28,7 @@
                 </ul> 
                 {% endcomment %}
 
-              <a href="#" class="btn btn--sub btn--lg">Send Message </a>
+          {% comment %}     <a href="#" class="btn btn--sub btn--lg">Send Message </a> {% endcomment %}
             </div>
           </div>
         </div>
@@ -47,6 +51,7 @@
                 <h4>
                   {{ skill.name }}
                 </h4>
+                
                 <p>
                   {{ skill.description }}
                 </p>
