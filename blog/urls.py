@@ -9,6 +9,7 @@ urlpatterns = [
     path("", include("projects.urls", namespace="projects")),
     path("admin/", admin.site.urls),
     path("users/", include("users.urls", namespace="users")),
+    path("api/", include("api.urls")),
     path(
         "reset_password/",
         auth_views.PasswordResetView.as_view(template_name="reset/reset_password.html"),
