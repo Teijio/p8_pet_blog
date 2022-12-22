@@ -10,7 +10,7 @@ from .forms import ProjectForm, ReviewForm
 
 def projects(request):
     projects, search_query = search_projects(request)
-    custom_range, projects= paginator_projects(request, projects, 3)
+    custom_range, projects = paginator_projects(request, projects, 3)
     context = {
         "projects": projects,
         "search_query": search_query,
@@ -28,8 +28,8 @@ def project(request, pk):
         review.project = project
         review.owner = request.user.profile
         review.save()
-        project.get_vote_count 
-        #update later ^
+        project.get_vote_count
+        # update later ^
         messages.success(request, "Your review was successfully submitted!")
         return redirect("projects:project", pk=project.id)
     context = {"project": project, "form": form}
@@ -41,6 +41,9 @@ def create_project(request):
     profile = request.user.profile
     form = ProjectForm()
     if request.method == "POST":
+        new_tags = (
+            request.POST.get("new_tags").replace(",", " ").upper().split()
+        )
         form = ProjectForm(
             request.POST or None,
             files=request.FILES or None,
@@ -49,6 +52,10 @@ def create_project(request):
             project = form.save()
             project.owner = profile
             project.save()
+            for tag in new_tags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                project.tags.add(tag)
+
             return redirect("projects:projects")
     context = {"form": form}
     return render(request, "projects/project_form.html", context)
@@ -64,15 +71,22 @@ def update_project(request, pk):
         instance=project,
     )
     if request.method == "POST":
+        new_tags = (
+            request.POST.get("new_tags").replace(",", " ").upper().split()
+        )
         form = ProjectForm(
             request.POST or None,
             files=request.FILES or None,
             instance=project,
         )
         if form.is_valid():
-            form.save()
+            project = form.save()
+            for tag in new_tags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                project.tags.add(tag)
+                
             return redirect("projects:projects")
-    context = {"form": form}
+    context = {"form": form, "project": project}
     return render(request, "projects/project_form.html", context)
 
 

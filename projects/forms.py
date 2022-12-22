@@ -14,8 +14,7 @@ class ProjectForm(ModelForm):
             "description",
             "demo_link",
             "source_link",
-            "tags",
-        ]
+        ]  # мы вырезали tags, передаём их через html
         widgets = {"tags": forms.CheckboxSelectMultiple}
 
     def __init__(self, *args, **kwargs):

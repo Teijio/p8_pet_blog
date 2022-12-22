@@ -29,6 +29,20 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user.username)
 
+    class Meta:
+        ordering = (
+            "created",
+        )
+
+    # в except нужно будет добавить картинку
+    @property
+    def image_url(self):
+        try:
+            url = self.profile_image.url
+        except:
+            url = ""
+        return url
+
 
 class Skill(models.Model):
     owner = models.ForeignKey(
@@ -54,7 +68,7 @@ class Message(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="messages"
+        related_name="messages",
     )
     name = models.CharField(max_length=200, null=True, blank=True)
     email = models.EmailField(max_length=200, null=True, blank=True)
@@ -62,10 +76,12 @@ class Message(models.Model):
     is_read = models.BooleanField(default=False, null=True)
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
-    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    
+    id = models.UUIDField(
+        primary_key=True, unique=True, default=uuid.uuid4, editable=False
+    )
+
     def __str__(self):
         return self.subject
-    
+
     class Meta:
         ordering = ["is_read", "-created"]

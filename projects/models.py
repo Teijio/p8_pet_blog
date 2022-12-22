@@ -30,6 +30,15 @@ class Project(models.Model):
             "-created",
         )
 
+    @property
+    def image_url(self):
+        try:
+            url = self.featured_image.url
+        except:
+            url = ""
+        return url
+
+
     # делаем лист, чтобы проверить, можем ли мы оставить ревью
     @property
     def reviewers(self):

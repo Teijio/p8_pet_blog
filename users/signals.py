@@ -31,6 +31,7 @@ def profile_created(sender, instance, created, **kwargs):
             fail_silently=False,
         )
 
+
 @receiver(post_save, sender=Profile)
 def update_user(sender, instance, created, **kwargs):
     profile = instance
@@ -45,9 +46,15 @@ def update_user(sender, instance, created, **kwargs):
 # при удаление профайла удалится и юзер
 @receiver(post_delete, sender=Profile)
 def profile_deleted(sender, instance, **kwargs):
-    user = instance.user
-    user.delete()
+    try:  # без этого, когда мы удаляли юзера - возникала ошибка
+        # в общем когда мы удаляли юзера первым, он будто-то удалялся,
+        # а потом мы передавали instance (который условно удалён уже)
+        user = instance.user
+        user.delete()
+    except:
+        pass
 
 
-# post_save.connect(profile_updated, sender=User)
-# post_delete.connect(profile_updated, sender=Profile)
+# post_save.connect(profile_created, sender=User)
+# post_save.connect(update_user, sender=Profile)
+# post_delete.connect(profile_deleted, sender=Profile)

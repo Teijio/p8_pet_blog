@@ -7,7 +7,7 @@
       <div class="column column--1of3">
         <div class="card text-center">
           <div class="card__body dev">
-            <img class="avatar avatar--xl" src="{{ profile.profile_image.url }}" />
+            <img class="avatar avatar--xl" src="{{ profile.image_url }}" />
             <h2 class="dev__name">{{ profile.name }}</h2>
             <p class="dev__title">{{ profile.short_intro}}</p>
             {% if profile.location %}
@@ -56,7 +56,7 @@
                 <div class="card project">
                   <a href="{% url 'projects:project' project.id %}" class="project">
                     {% if project.featured_image %}
-                      <img class="project__thumbnail" src="{{ project.featured_image.url }}" alt="project thumbnail" />
+                      <img class="project__thumbnail" src="{{ project.image_url }}" alt="project thumbnail" />
                     {% else %}
                       <img class="project__thumbnail" src="{% static 'images/12.jpg' %}" alt="project thumbnail" />
                     {% endif %}
