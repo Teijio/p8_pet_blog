@@ -95,15 +95,21 @@ TEMPLATES = [
 WSGI_APPLICATION = "blog.wsgi.application"
 
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": "blog_db",
+#         "USER": "postgres",
+#         "PASSWORD": "1234",
+#         "HOST": "localhost",
+#         "PORT": "",
+#         "OPTIONS": {"options": "-c search_path=django,public"},
+#     }
+# }
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "blog_db",
-        "USER": "postgres",
-        "PASSWORD": "1234",
-        "HOST": "localhost",
-        "PORT": "",
-        "OPTIONS": {"options": "-c search_path=django,public"},
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
