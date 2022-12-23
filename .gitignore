@@ -5,10 +5,10 @@ __pycache__/
 
 # C extensions
 *.so
-media/
+# media/
 resources/
 # static/
-staticfiles/
+# staticfiles/
 # Distribution / packaging
 .Python
 build/
